@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,9 @@ public class FilePathUtils {
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
 
-	@Resource(name = "shopizer-properties")
+//	@Resource(name = "shopizer-properties")
+  @Autowired
+  @Qualifier("shopizer-properties")
 	public Properties properties = new Properties();
 
 	/**
@@ -122,8 +125,8 @@ public class FilePathUtils {
 	public String buildStoreUri(MerchantStore store, HttpServletRequest request) {
 		return buildBaseUrl(request, store);
 	}
-	
-	
+
+
 	/**
 	 *\/<contextPath>
 	 */

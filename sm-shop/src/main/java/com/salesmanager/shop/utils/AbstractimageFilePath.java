@@ -11,9 +11,7 @@ import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.content.FileContentType;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.constants.Constants;
-
-
-
+import org.springframework.beans.factory.annotation.Qualifier;
 
 
 public abstract class AbstractimageFilePath implements ImageFilePath {
@@ -22,12 +20,12 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 	public abstract String getBasePath();
 
 	public abstract void setBasePath(String basePath);
-	
-	protected static final String CONTEXT_PATH = "CONTEXT_PATH";
-	
-	public @Resource(name="shopizer-properties") Properties properties = new Properties();//shopizer-properties
 
-	
+	protected static final String CONTEXT_PATH = "CONTEXT_PATH";
+
+	public @Qualifier("shopizer-properties") Properties properties = new Properties();//shopizer-properties
+
+
 	public Properties getProperties() {
 		return properties;
 	}
@@ -49,9 +47,9 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 					imgName.append(imageName);
 				}
 		return imgName.toString();
-				
+
 	}
-	
+
 	/**
 	 * Builds a static content image file path that can be used by image servlet
 	 * utility for getting the physical image by specifying the image type
@@ -67,7 +65,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return imgName.toString();
 
 	}
-	
+
 	/**
 	 * Builds a manufacturer image file path that can be used by image servlet
 	 * utility for getting the physical image
@@ -82,7 +80,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 				.append(manufacturer.getId()).append(Constants.SLASH)
 				.append(imageName).toString();
 	}
-	
+
 	/**
 	 * Builds a product image file path that can be used by image servlet
 	 * utility for getting the physical image
@@ -95,7 +93,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return new StringBuilder().append(getBasePath()).append(Constants.PRODUCTS_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH)
 				.append(product.getSku()).append(Constants.SLASH).append(Constants.SMALL_IMAGE).append(Constants.SLASH).append(imageName).toString();
 	}
-	
+
 	/**
 	 * Builds a default product image file path that can be used by image servlet
 	 * utility for getting the physical image
@@ -108,7 +106,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return new StringBuilder().append(getBasePath()).append(Constants.PRODUCTS_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH)
 				.append(sku).append(Constants.SLASH).append(Constants.SMALL_IMAGE).append(Constants.SLASH).append(imageName).toString();
 	}
-	
+
 	/**
 	 * Builds a large product image file path that can be used by the image servlet
 	 * @param store
@@ -122,7 +120,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 	}
 
 
-	
+
 	/**
 	 * Builds a merchant store logo path
 	 * @param store
@@ -132,7 +130,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return new StringBuilder().append(getBasePath()).append(Constants.FILES_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH).append(FileContentType.LOGO).append(Constants.SLASH)
 				.append(store.getStoreLogo()).toString();
 	}
-	
+
 	/**
 	 * Builds product property image url path
 	 * @param store
@@ -143,12 +141,12 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return new StringBuilder().append(getBasePath()).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH).append(FileContentType.PROPERTY).append(Constants.SLASH)
 				.append(imageName).toString();
 	}
-	
+
 	public String buildProductPropertyImageUtils(MerchantStore store, String imageName) {
 		return new StringBuilder().append(getBasePath()).append(Constants.FILES_URI).append(Constants.SLASH).append(store.getCode()).append("/").append(FileContentType.PROPERTY).append("/")
 				.append(imageName).toString();
 	}
-	
+
 	/**
 	 * Builds static file url path
 	 * @param store
@@ -162,10 +160,10 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		}
 		return sb.toString();
 	}
-	
 
-	
-	
+
+
+
 
 
 }

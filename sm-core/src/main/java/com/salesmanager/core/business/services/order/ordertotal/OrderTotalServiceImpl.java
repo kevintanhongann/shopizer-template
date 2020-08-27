@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
@@ -23,35 +24,36 @@ import com.salesmanager.core.modules.order.total.OrderTotalPostProcessorModule;
 
 @Service("OrderTotalService")
 public class OrderTotalServiceImpl implements OrderTotalService {
-	
+
 	@Autowired
-	@Resource(name="orderTotalsPostProcessors")
-	List<OrderTotalPostProcessorModule> orderTotalPostProcessors;
-	
+//	@Resource(name="orderTotalsPostProcessors")
+  @Qualifier("orderTotalsPostProcessors")
+  List<OrderTotalPostProcessorModule> orderTotalPostProcessors;
+
 	@Inject
 	private ProductService productService;
-	
+
 	@Inject
 	private LanguageService languageService;
 
 	@Override
 	public OrderTotalVariation findOrderTotalVariation(OrderSummary summary, Customer customer, MerchantStore store, Language language)
 			throws Exception {
-	
+
 		RebatesOrderTotalVariation variation = new RebatesOrderTotalVariation();
-		
+
 		List<OrderTotal> totals = null;
-		
+
 		if(orderTotalPostProcessors != null) {
 			for(OrderTotalPostProcessorModule module : orderTotalPostProcessors) {
 				//TODO check if the module is enabled from the Admin
-				
+
 				List<ShoppingCartItem> items = summary.getProducts();
 				for(ShoppingCartItem item : items) {
-					
+
 					Long productId = item.getProductId();
 					Product product = productService.getProductForLocale(productId, language, languageService.toLocale(language, store));
-					
+
 					OrderTotal orderTotal = module.caculateProductPiceVariation(summary, item, product, customer, store);
 					if(orderTotal==null) {
 						continue;
@@ -60,15 +62,15 @@ public class OrderTotalServiceImpl implements OrderTotalService {
 						totals = new ArrayList<OrderTotal>();
 						variation.setVariations(totals);
 					}
-					
+
 					//if product is null it will be catched when invoking the module
 					orderTotal.setText(StringUtils.isNoneBlank(orderTotal.getText())?orderTotal.getText():product.getProductDescription().getName());
-					variation.getVariations().add(orderTotal);	
+					variation.getVariations().add(orderTotal);
 				}
 			}
 		}
-		
-		
+
+
 		return variation;
 	}
 
